@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        body{
+            text-align: center;
+            background-color: black;
+        }
+        h2{
+            background-color: rgb(116, 116, 216);
+            padding: 5px;
+            color: white;
+        }
+        main{
+            display:flex;
+            flex-wrap: wrap;
+        }
+        section{
+            width: 30%;
+            overflow-wrap: break-word;
+            margin: auto;
+            border-radius: 10px;
+            padding:3px;
+            margin-top: 10px;
+            background-image: linear-gradient(rgb(116,116,216),black);
+            color: white;
+        }
+        h3{
+            font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            color: yellow;
+        }
+        button{
+            margin:10px;
+            border-radius: 10px;
+            border: 2px solid skyblue;
+            font-weight: bold;
+        }
+        input{
+            height: 27px;
+            border-radius: 10px;
+            border: 2px solid blue;
+            width: 70%;outline: none;
+        }
+        label{
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            color: white;
+        }
+        .start{
+            height: 40px;
+            width: 30%;
+            background-color: green;
+            color: white;
+            font-size: large;
+        }
+        .add{
+            background-color: orange;
+            margin-top: 20px;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 60px;
+            width: 70px;
+        }
+        button:hover{
+            box-shadow: skyblue 0px 0px 21px;
+            cursor: pointer;
+            border: 3px solid skyblue;
+        }
+        input:hover{
+            cursor: pointer;
+            border: 3px solid skyblue;
+            box-shadow:skyblue 0px 0px 13px;
+        }
+        .count{
+            font-size: 30px;
+            font-family: cursive;
+            color: aqua;
+        }
+        .dis{
+            width: 100%;
+            height: fit-content;
+            border-radius: 5px;
+            display: grid;
+            grid-template-columns: 3fr 3fr 3fr 3fr;
+        }
+        .no{
+                color: yellow;
+                border-bottom: 1px solid white;
+                padding: 4px;
+                font-size: larger;
+            }
+            .txt{
+                color: white;
+                font-family:Verdana, Geneva, Tahoma, sans-serif;
+                padding: 4px;
+                font-size: medium;
+            }
+            .div{
+                border: 2px solid white;
+                padding: 5px;
+                margin: 2px;
+                border-top-left-radius: 10px;
+                border-top-right-radius:10px;
+                background-color: black;
+                box-shadow:blue 0px 0px 30px;
+            }
+        .remove{
+            background-color: red;
+            color: white;
+        }
+        @media only screen and (max-width:1000px){
+            section{
+                width: 45%;
+            }
+        }
+        @media only screen and (max-width:600px){
+            section{
+                width: 100%;
+            }
+        }
+        @media only screen and (max-width:200px){
+            .start{
+                font-size: small;
+                width: 70%;
+            }
+            h2{
+                font-size: small;
+                width: 100%;
+            }
+            .dis{
+                grid-template-columns: 6fr 6fr;
+            }
+            .no{
+                font-size: large;
+            }
+        }
+    </style>
+</head>
+<body onload="bodyLoad()">
+    <header><h2>&#9200; Countdown Timer</h2></header>
+    <main></main>
+    <div>
+        <button onclick="add()" class="add">+</button><br><label>Add a new timer.</label>
+    </div>
+</body>
+<script>
+    var num=1; var id2=[]; //var num for number of timers and var id2 for clearIntervls(id).............................
+    var main=document.querySelector('main');
+     function struct(){ //constructing dynamic part.................................
+        var section=document.createElement('section');
+        section.setAttribute('class',`timer${num}`);
+        main.appendChild(section);
+        section.innerHTML=`<h3><span>&#9202;</span>Countdown Timer<span>&#9202;</span></h3>
+        <div class='entry${num}'>
+            <label>Write a message to show when timer finish.</label><br>
+            <input type="text" placeholder="Your message here" class="msg${num}"><br><br>
+            <label>Enter Target Date</label><br>
+            <input type='datetime-local' class='target${num}'><br>
+            <button class='start' onclick=start(${num})>Start</button>
+        </div>
+        <div class='count count${num}'></div>
+        <button class="remove" onclick='document.querySelector(".timer${num}").remove();
+        clearInterval(id2[${num}]);'>Remove</button>`;//DOM ended........................................
+        num++;
+     }
+     function bodyLoad(){// a timrer will be created after loading the page......................................
+        struct();
+     }
+     function add(){// create additional timer.......................................................................
+        struct();
+        }
+    function start(num){
+        
+
+        var newDate=new Date(document.querySelector(".target"+num).value);
+            var msg=document.querySelector(".msg"+num).value;
+            var ms;
+
+            function timer(){                      //calculate the time...................................................
+            ms=newDate - new Date();
+            var day=parseInt(ms/1000/60/60/24);
+            var hr=parseInt(ms/1000/60/60-24*day);
+            var min=parseInt((ms/1000/60)-(day*24+hr)*60);
+            var sec=parseInt((ms/1000)-(((day*24+hr)*60)+min)*60);
+            
+            if(ms>1000){
+            document.querySelector(".entry"+num).style.display="none";   //hide the inputs area and create dynamic countdown div for each timer.............
+            document.querySelector(".count"+num).innerHTML=`<div class="dis">
+            <div class="div"><div class="no" id="day${num}"></div><div class="txt">Day</div></div>
+             <div class="div"><div class="no" id="hr${num}"></div><div class="txt">Hr</div></div>
+             <div class="div"><div class="no" id="min${num}"></div><div class="txt">Min</div></div>
+             <div class="div"><div class="no" id="sec${num}"></div><div class="txt">Sec</div></div>
+             </div>`;
+             document.getElementById("day"+num).innerHTML=day;
+             document.getElementById("hr"+num).innerHTML=hr;
+             document.getElementById("min"+num).innerHTML=min;
+             document.getElementById("sec"+num).innerHTML=sec;
+            }
+             else if(ms<1000){
+             message();clearInterval(id2[num]);}}    //show the message and stop the loop.................................
+             
+            function message(){        //message and audio part..................................
+            var audio=new Audio("/CountDown.mp3");
+            audio.play();
+            if(msg===""){msg="Countdown Finished."}
+            document.querySelector(".count"+num).innerHTML=msg;}
+
+            if(newDate > new Date()){
+           id2[num]=setInterval(timer,1000);}else{
+            document.querySelector(".count"+num).innerHTML="Please enter an upcoming time"}
+    }
+</script>
+</html>
